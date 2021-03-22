@@ -1,0 +1,244 @@
+<html>
+	
+	<head>
+
+	</head>
+
+	<body>
+		<div class="container">
+			<div class="center">
+				<img id="letter" src="static/alphabet/a.gif" width=500 height=500></img>
+				<p id="sign_meaning"></p>
+				<p id="sign_meaning_out"></p>
+			</div>
+		</div>
+	</body>
+
+</html>
+
+
+
+
+
+<script>
+
+
+	function resetAnim(e) {
+		e.className = "";
+		e.style.animation = 'none';
+		e.offsetHeight; /* trigger reflow */
+		e.style.animation = null; 
+	}
+
+
+	function clearMeaning(){
+		var el_meaning = document.getElementById('sign_meaning');
+		var el_meaning_out = document.getElementById('sign_meaning_out');
+		sign_meaning_out.innerHTML = el_meaning.innerHTML;
+		resetAnim(sign_meaning_out);
+		el_meaning.innerHTML = '';
+	}
+
+
+	
+	document.addEventListener('keydown', logKey);
+	var el = document.getElementById('letter');
+	var el_meaning = document.getElementById('sign_meaning');
+	var el_meaning_out = document.getElementById('sign_meaning_out');
+	el_meaning.innerHTML = 'a';
+
+
+
+	var time_show = 0;
+
+
+	function logKey(e) {
+		const key = e.key.toLowerCase();
+
+	  	if (String(key).length == 1) {
+
+	  		resetAnim(el);
+
+	  		if (key == "j") {
+	  			// special animation for j
+	  			el.className = "letter_j";
+	  			el.src = "static/alphabet/j_noarrow.png";
+	  		} else if (key == "z") {
+	  			// special animation for z
+	  			el.className = "letter_z";
+	  			el.src = "static/alphabet/z_noarrow.png";
+	  		} else if (key.charCodeAt(0) >= 97  &&  key.charCodeAt(0) <= 122) {
+	  			// the char is a letter
+	  			el.className = "letter";
+				el.src = "static/alphabet/" + key + ".gif";
+			} else {
+
+			}
+
+			el_meaning.innerHTML += key;
+			
+
+		} else {
+
+			if (key == 'backspace') {
+				el_meaning.innerHTML = el_meaning.innerHTML.slice(0, -1);
+			} else {
+				clearMeaning()
+			}
+
+
+		}
+
+		time_show = 2
+
+		console.log(key)
+
+	}
+
+
+
+
+
+	setInterval(function(){
+
+		// console.log(time_show)
+
+		if (time_show <= 0) {
+			clearMeaning()
+		} else {
+			time_show--
+		}
+
+	}, 1000)
+
+
+
+
+</script>
+
+
+
+
+
+<style>
+
+
+	body {
+		  justify-content: center;
+	}
+
+
+
+	img {
+
+	}
+
+
+	#sign_meaning {
+		margin:auto;
+		font-size: 50px;
+		font-family: Calibri;
+		text-decoration: bold;
+		text-align: center;
+	}
+
+
+
+	#sign_meaning_out {
+		margin:auto;
+		font-size: 50px;
+		font-family: Calibri;
+		text-decoration: bold;
+		text-align: center;
+		animation: slide-bottom 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+	}
+
+
+
+	@keyframes slide-bottom {
+	  0% {
+	            transform: translateY(0);
+	            opacity: 1;
+	  }
+	  100% {
+	            transform: translateY(100px);
+	            opacity:0;
+	  }
+	}
+
+
+
+
+
+
+	.container {
+	  width: 100%;
+	  height:100%;
+	}
+
+	.center {
+	  margin: 0;
+	  position: absolute;
+	  top: 40%;
+	  left: 50%;
+	  -ms-transform: translate(-50%, -50%);
+	  transform: translate(-50%, -50%);
+	}
+
+
+
+
+
+
+	.letter {
+		animation: scale-up-center 0.2s;
+	}
+
+	@keyframes scale-up-center {
+	  0% {
+	            transform: scale(0.8);
+	  }
+	  100% {
+	            transform: scale(1);
+	  }
+	}
+
+
+
+	.letter_j {
+		margin-left: -50px;
+		margin-top: 100px;
+		offset-path: path('M235,258 C312,402 340,202 326,143');
+		offset-rotate: 0deg;
+		animation: move 0.3s ease-in-out;
+		animation-fill-mode: forwards;
+	}
+
+
+
+
+	.letter_z {
+		margin-left: -100px;
+		margin-top: 130px;
+		offset-path: path('M 140 88    400 88   140 175    400 175');
+		offset-rotate: 0deg;
+		animation: move 0.8s ease-out;
+		animation-fill-mode: forwards;
+	}
+
+
+
+
+	@keyframes move {
+		0% {
+	        transform: scale(0.8);
+		}
+
+		100% { 
+			offset-distance: 100%;
+	        transform: scale(1);
+		}
+	}
+
+
+</style>
