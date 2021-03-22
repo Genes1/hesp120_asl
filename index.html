@@ -1,12 +1,17 @@
 <html>
 	
 	<head>
-		<button onclick="toggleMode()">Toggle mode:<b id='mode'>live transcription</b></button>
+		
 	</head>
 
 	<body>
 		<div class="container">
 			
+			<center>
+				<button onclick="toggleMode()"
+					style="width:300px; height:50px"
+				>Toggle mode: <b id='mode'>live transcription</b></button>
+			</center>
 			<!-- display content for table -->
 			<div id="tablecontainer" class="center"></div>
 			
@@ -242,15 +247,11 @@
 <style>
 
 
-	body {
+	body, head {
 		  justify-content: center;
 	}
 
 
-
-	img {
-
-	}
 
 
 	#sign_meaning {
