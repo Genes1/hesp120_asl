@@ -1,16 +1,22 @@
 <html>
 	
 	<head>
-
+		<button onclick="toggleMode()">Toggle mode:<b id='mode'>live transcription</b></button>
 	</head>
 
 	<body>
 		<div class="container">
-			<div id="tablecontainer" class="center">
+			
+			<!-- display content for table -->
+			<div id="tablecontainer" class="center"></div>
+			
+			<!-- display content for live transcription -->
+			<div class="center">
 				<img id="letter" src="static/alphabet/a.gif" width=500 height=500></img>
 				<p id="sign_meaning"></p>
 				<p id="sign_meaning_out"></p>
 			</div>
+
 		</div>
 	</body>
 
@@ -21,6 +27,71 @@
 
 
 <script>
+
+
+	var mode = 'live' //  live   OR   table
+	var interval = '' // live mode afk checker
+
+
+	// saving components for ease of use
+	document.addEventListener('keydown', logKey);
+	var el = document.getElementById('letter');
+	var el_meaning = document.getElementById('sign_meaning');
+	var el_meaning_out = document.getElementById('sign_meaning_out');
+	el_meaning.innerHTML = '';
+
+
+
+	var time_show = 0;
+	var typed_string = '';
+
+
+	// create the interval initially
+	interval = setInterval(function(){
+
+		// console.log(time_show)
+
+		if (time_show <= 0) {
+			clearMeaning()
+		} else {
+			time_show--
+		}
+
+	}, 1000)
+
+	
+
+
+
+	function toggleMode() {
+		//mode = mode == 'live' ? 'table' : 'live'
+		if (mode == 'live') {
+
+			clearInterval(interval)
+			typed_string = ''
+			el_meaning.innerHTML = ''
+			el.style.display = 'none';
+			mode = 'table'
+
+
+		} else {
+
+			document.getElementById('tablecontainer').innerHTML = ''
+
+			el.style.display = "inline-block"
+			mode = 'live'
+			interval = setInterval(function(){
+				if (time_show <= 0) {
+					clearMeaning()
+				} else {
+					time_show--
+				}
+			}, 1000)
+		}
+
+		document.getElementById('mode').innerHTML = mode
+		
+	}
 
 
 	/*
@@ -88,16 +159,7 @@
 
 
 	
-	document.addEventListener('keydown', logKey);
-	var el = document.getElementById('letter');
-	var el_meaning = document.getElementById('sign_meaning');
-	var el_meaning_out = document.getElementById('sign_meaning_out');
-	el_meaning.innerHTML = '';
 
-
-
-	var time_show = 0;
-	var typed_string = '';
 
 
 
@@ -111,61 +173,62 @@
 
 	  		resetAnim(el);
 
-	  		if (key == "j") {
-	  			// special animation for j
-	  			el.className = "letter_j";
-	  			el.src = "static/alphabet/j_noarrow.png";
-	  		} else if (key == "z") {
-	  			// special animation for z
-	  			el.className = "letter_z";
-	  			el.src = "static/alphabet/z_noarrow.png";
-	  		} else if (key.charCodeAt(0) >= 97  &&  key.charCodeAt(0) <= 122) {
-	  			// the char is a letter
-	  			el.className = "letter";
-				el.src = "static/alphabet/" + key + ".gif";
+			if (mode == 'live') {
+				if (key == "j") {
+		  			// special animation for j
+		  			el.className = "letter_j";
+		  			el.src = "static/alphabet/j_noarrow.png";
+		  		} else if (key == "z") {
+		  			// special animation for z
+		  			el.className = "letter_z";
+		  			el.src = "static/alphabet/z_noarrow.png";
+		  		} else if (key.charCodeAt(0) >= 97  &&  key.charCodeAt(0) <= 122) {
+		  			// the char is a letter
+		  			el.className = "letter";
+					el.src = "static/alphabet/" + key + ".gif";
+				}
+				el_meaning.innerHTML += key;
 			} else {
-
+				typed_string += key;
 			}
 
-			//el_meaning.innerHTML += key;
-			typed_string += key;
-
-		} else {
+		} else { // the input is backspace, control, shift, etc
 
 			if (key == 'backspace') {
-				//el_meaning.innerHTML = el_meaning.innerHTML.slice(0, -1);
-				typed_string = typed_string.slice(0, -1)
+
+				if (mode == 'live') {
+					el_meaning.innerHTML = el_meaning.innerHTML.slice(0, -1);
+				} else {
+					typed_string = typed_string.slice(0, -1)
+				}
+
 			} else {
-				//clearMeaning()
-				// if it's enter or any other key, clear the input
-				typed_string = ''
+
+				if (mode == 'live') {
+					clearMeaning()
+				} else {
+					typed_string = ''
+				}
+
+
 			}
 
 		}
 
-		document.getElementById('tablecontainer').innerHTML = makeTable(typed_string)
-		time_show = 2
+		if (mode == 'live') {
+			time_show = 2
+		} else {
+			document.getElementById('tablecontainer').innerHTML = makeTable(typed_string)
+		}
 
 		//console.log(key)
-		console.log(typed_string)
+		//console.log(typed_string)
 
 	}
 
 
 
 
-
-	// setInterval(function(){
-
-	// 	// console.log(time_show)
-
-	// 	if (time_show <= 0) {
-	// 		clearMeaning()
-	// 	} else {
-	// 		time_show--
-	// 	}
-
-	// }, 1000)
 
 
 
