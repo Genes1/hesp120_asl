@@ -6,7 +6,7 @@
 
 	<body>
 		<div class="container">
-			<div class="center">
+			<div id="tablecontainer" class="center">
 				<img id="letter" src="static/alphabet/a.gif" width=500 height=500></img>
 				<p id="sign_meaning"></p>
 				<p id="sign_meaning_out"></p>
@@ -23,6 +23,9 @@
 <script>
 
 
+	/*
+		Reset the animation class for a particlar element
+	*/
 	function resetAnim(e) {
 		e.className = "";
 		e.style.animation = 'none';
@@ -31,13 +34,57 @@
 	}
 
 
+	/*
+		Clear the meaning subline.
+	*/
 	function clearMeaning(){
 		var el_meaning = document.getElementById('sign_meaning');
 		var el_meaning_out = document.getElementById('sign_meaning_out');
 		sign_meaning_out.innerHTML = el_meaning.innerHTML;
 		resetAnim(sign_meaning_out);
-		el_meaning.innerHTML = '';
+		el_meaning.innerHTML = ' ';
 	}
+
+
+	/*
+		Make a table from a passed string.
+		Outputs an HTML table as a string, so that it can be embedded.
+	
+		Tables look like this:
+		<table>
+			<tr> // table row
+				<th> cell content </th>
+			</tr>
+		</table>
+
+	*/
+	function makeTable(s) {
+		
+		//grow the rows as we go along
+		row_image = '<tr>'
+		row_letter = '<tr>'
+
+		// for every character, add an img tag with src=letter and 
+		for (var i = 0; i < s.length; i++) {
+
+			c = s[i]
+
+			// this may have to change, j and z are not pure hand symbols
+			if (c.charCodeAt(0) >= 97  &&  c.charCodeAt(0) <= 122) {
+				row_image += "<td><img id='letter' src='static/alphabet/" + c + ".gif' width=100 height=100></img></td>"
+			} else {
+				row_image += "<td style='min-width:100px'> </td>"
+			}
+
+			row_letter += "<td><p id='sign_meaning'>" + c + " </p></td>";
+		}
+
+
+		return '<table>' + row_image + '</tr>' + row_letter + '</tr></table>'
+
+	}
+
+
 
 
 	
@@ -45,13 +92,18 @@
 	var el = document.getElementById('letter');
 	var el_meaning = document.getElementById('sign_meaning');
 	var el_meaning_out = document.getElementById('sign_meaning_out');
-	el_meaning.innerHTML = 'a';
+	el_meaning.innerHTML = '';
 
 
 
 	var time_show = 0;
+	var typed_string = '';
 
 
+
+	/*
+		Occurs on every keypress.
+	*/
 	function logKey(e) {
 		const key = e.key.toLowerCase();
 
@@ -75,23 +127,27 @@
 
 			}
 
-			el_meaning.innerHTML += key;
-			
+			//el_meaning.innerHTML += key;
+			typed_string += key;
 
 		} else {
 
 			if (key == 'backspace') {
-				el_meaning.innerHTML = el_meaning.innerHTML.slice(0, -1);
+				//el_meaning.innerHTML = el_meaning.innerHTML.slice(0, -1);
+				typed_string = typed_string.slice(0, -1)
 			} else {
-				clearMeaning()
+				//clearMeaning()
+				// if it's enter or any other key, clear the input
+				typed_string = ''
 			}
-
 
 		}
 
+		document.getElementById('tablecontainer').innerHTML = makeTable(typed_string)
 		time_show = 2
 
-		console.log(key)
+		//console.log(key)
+		console.log(typed_string)
 
 	}
 
@@ -99,17 +155,17 @@
 
 
 
-	setInterval(function(){
+	// setInterval(function(){
 
-		// console.log(time_show)
+	// 	// console.log(time_show)
 
-		if (time_show <= 0) {
-			clearMeaning()
-		} else {
-			time_show--
-		}
+	// 	if (time_show <= 0) {
+	// 		clearMeaning()
+	// 	} else {
+	// 		time_show--
+	// 	}
 
-	}, 1000)
+	// }, 1000)
 
 
 
