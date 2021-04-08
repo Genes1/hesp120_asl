@@ -34,8 +34,8 @@
 <script>
 
 
-	var mode = 'live' //  live   OR   table
-	var interval = '' // live mode afk checker
+	var mode = 'live' //  live   OR   table   OR   game
+	var interval; // live mode afk checker
 
 
 	// saving components for ease of use
@@ -79,7 +79,7 @@
 			mode = 'table'
 
 
-		} else {
+		} else if (mode == 'table'){
 
 			document.getElementById('tablecontainer').innerHTML = ''
 
@@ -92,6 +92,8 @@
 					time_show--
 				}
 			}, 1000)
+		} else {
+
 		}
 
 		document.getElementById('mode').innerHTML = mode
@@ -173,7 +175,7 @@
 	*/
 	function logKey(e) {
 		const key = e.key.toLowerCase();
-
+		console.log(key)
 	  	if (String(key).length == 1) {
 
 	  		resetAnim(el);
@@ -230,11 +232,6 @@
 		//console.log(typed_string)
 
 	}
-
-
-
-
-
 
 
 
