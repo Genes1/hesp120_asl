@@ -61,8 +61,17 @@
 
 
     mounted() {
-      document.addEventListener('keydown', this.logKey);
-	  //this.toggleMode();
+		document.addEventListener('keydown', this.logKey);
+
+		this.interval = setInterval(() => {
+			console.log(this.time_show)
+			if (this.time_show <= 0) {
+				this.clearMeaning()
+			} else {
+				this.time_show--
+			}
+		}, 1000)
+
     },
 
 
@@ -93,8 +102,10 @@
 						this.$refs['sign_show'].src = "../static/alphabet/" + key + ".gif";
 					}
 
-					this.typed_string += key;
+					
 				}
+
+				this.typed_string += key;
 
 			} else { // the input is backspace, control, shift, etc
 
