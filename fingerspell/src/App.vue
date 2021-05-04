@@ -15,7 +15,18 @@
 
 
 			<!-- display content for table -->
-			<div v-if="mode == 'table'" id="tablecontainer" class="center"></div>
+			<div v-if="mode == 'table'" id="tablecontainer" class="center">
+				<table>
+					<tr>
+						<td v-for="c in typed_string" :key="c">
+							<img :src="`static/alphabet/${c}.gif`" width=100 height=100/>
+						</td>
+					</tr>
+					<tr>
+						<td v-for="c in typed_string" :key="c" style='text-align: center;'> {{c}} </td>
+					</tr>
+				</table>
+			</div>
 			
 
 
@@ -85,9 +96,11 @@
 
 			if (String(key).length == 1) {
 
-				this.resetAnim("sign_show");
+				
 
 				if (this.mode == 'live') {
+					this.resetAnim("sign_show");
+
 					if (key == "j") {
 						// special animation for j
 						this.letterClass = "letter_j";
@@ -133,8 +146,6 @@
 			
 			if (this.mode == 'live') {
 				this.time_show = 2
-			} else {
-				document.getElementById('tablecontainer').innerHTML = makeTable(this.typed_string)
 			}
 
         },
@@ -165,6 +176,8 @@
 
 
 
+
+
 		toggleMode() {
 			//mode = mode == 'live' ? 'table' : 'live'
 			if (this.mode == 'live') {
@@ -177,12 +190,12 @@
 
 			} else if (this.mode == 'table'){
 
-				document.getElementById('tablecontainer').innerHTML = ''
+				//document.getElementById('tablecontainer').innerHTML = ''
 
 				//el.style.display = "inline-block"
 				this.mode = 'live'
-				this.interval = setInterval(function(){
-					console.log('time')
+				this.interval = setInterval(() => {
+					console.log(this.time_show)
 					if (this.time_show <= 0) {
 						this.clearMeaning()
 					} else {
