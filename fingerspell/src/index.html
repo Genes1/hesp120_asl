@@ -17,7 +17,7 @@
 			
 			<!-- display content for live transcription -->
 			<div class="center">
-				<center><img id="letter" src="static/alphabet/a.gif" width=500 height=500></img></center>
+				<center><img id="letter" src="../static/alphabet/a.gif" width=500 height=500></img></center>
 				<p id="sign_meaning"></p>
 				<p id="sign_meaning_out"></p>
 			</div>
@@ -184,15 +184,15 @@
 				if (key == "j") {
 		  			// special animation for j
 		  			el.className = "letter_j";
-		  			el.src = "static/alphabet/j_noarrow.png";
+		  			el.src = "../static/alphabet/j_noarrow.png";
 		  		} else if (key == "z") {
 		  			// special animation for z
 		  			el.className = "letter_z";
-		  			el.src = "static/alphabet/z_noarrow.png";
+		  			el.src = "../static/alphabet/z_noarrow.png";
 		  		} else if (key.charCodeAt(0) >= 97  &&  key.charCodeAt(0) <= 122) {
 		  			// the char is a letter
 		  			el.className = "letter";
-					el.src = "static/alphabet/" + key + ".gif";
+					el.src = "../static/alphabet/" + key + ".gif";
 				}
 				el_meaning.innerHTML += key;
 			} else {

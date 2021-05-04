@@ -1,225 +1,322 @@
 <template>
-	<div id="app">
-		<div class="container">
+	
 
+		<div class="container">
+			
 			<center>
-				<button
-					onclick="toggleMode()"
-					style="width:300px; height:50px"
-				>Toggle mode: <b id='mode'>live transcription</b></button>
+				<button @click="toggleMode()"
+					style="width:300px; height:50px;"
+				>
+					Toggle mode: 
+					<b id='mode'> {{mode}} </b>
+				</button>
 			</center>
+
+
+
 			<!-- display content for table -->
-			<div
-				id="tablecontainer"
-				class="center"
-			></div>
+			<div v-if="mode == 'table'" id="tablecontainer" class="center"></div>
+			
+
 
 			<!-- display content for live transcription -->
-			<div class="center">
-				<center><img
-						id="letter"
-						src="static/alphabet/a.gif"
-						width=500
-						height=500
-					></img></center>
-				<p id="sign_meaning"></p>
-				<p id="sign_meaning_out"></p>
+			<div v-else-if="mode == 'live'" class="center">
+
+				<center>
+					<img id="letter" ref="sign_show" :class="letterClass" src="static/alphabet/a.gif" width=500 height=500/>
+				</center>
+
+				<p id="sign_meaning" ref="text_in">{{typed_string}}</p>
+				<p id="sign_meaning_out" ref="text_out">{{test_out_string}}</p>
+
 			</div>
 
+
 		</div>
-	</div>
+
+
 </template>
 
 
 
 
-<script>
-  export default {
-    // https://rapidapi.com/dpventures/api/wordsapi?endpoint=54c00ec8e4b0ae089320058a
 
-    data () {
+<script>
+
+  export default {
+
+
+
+    data() {
       return {
+		letterClass: 'letter',
+		letterSrc: "../static/alphabet/a.png",
+		typed_string: '',
+		test_out_string: '',
         mode: 'live',
         interval: {},
-        time_show: 0,
-        typed_string: '',
-      }
+		time_show: 0,
+      };
     },
 
 
-    // saving components for ease of use
-    document.addEventListener("keydown", logKey);
-    var el = document.getElementById("letter");
-    var el_meaning = document.getElementById("sign_meaning");
-    var el_meaning_out = document.getElementById("sign_meaning_out");
-    el_meaning.innerHTML = "";
+    mounted() {
+      document.addEventListener('keydown', this.logKey);
+	  //this.toggleMode();
+    },
 
-    // create the interval initially
-    interval = setInterval(function () {
-      // console.log(time_show)
-
-      if (time_show <= 0) {
-        clearMeaning();
-      } else {
-        time_show--;
-      }
-    }, 1000);
 
     methods: {
-      toggleMode() {
-        //mode = mode == 'live' ? 'table' : 'live'
-        if (mode == "live") {
-          clearInterval(interval);
-          typed_string = "";
-          el_meaning.innerHTML = "";
-          el.style.display = "none";
-          mode = "table";
-        } else if (mode == "table") {
-          document.getElementById("tablecontainer").innerHTML = "";
 
-          el.style.display = "inline-block";
-          mode = "live";
-          interval = setInterval(function () {
-            if (time_show <= 0) {
-              clearMeaning();
-            } else {
-              time_show--;
-            }
-          }, 1000);
-        } else {
-        }
+      	logKey(e) {
+			  
 
-        document.getElementById("mode").innerHTML = mode;
-      },
+			const key = e.key.toLowerCase();
+			console.log(key)
 
-      /*
-          Reset the animation class for a particlar element
-        */
-      resetAnim(e) {
-        e.className = "";
-        e.style.animation = "none";
-        e.offsetHeight; /* trigger reflow */
-        e.style.animation = null;
-      },
+			if (String(key).length == 1) {
 
-      /*
-          Clear the meaning subline.
-        */
-      clearMeaning() {
-        var el_meaning = document.getElementById("sign_meaning");
-        var el_meaning_out = document.getElementById("sign_meaning_out");
-        sign_meaning_out.innerHTML = el_meaning.innerHTML;
-        resetAnim(sign_meaning_out);
-        el_meaning.innerHTML = " ";
-      },
+				this.resetAnim("sign_show");
 
-      /*
-          Make a table from a passed string.
-          Outputs an HTML table as a string, so that it can be embedded.
-        
-          Tables look like this:
-          <table>
-            <tr> // table row
-              <th> cell content </th>
-            </tr>
-          </table>
+				if (this.mode == 'live') {
+					if (key == "j") {
+						// special animation for j
+						this.letterClass = "letter_j";
+						this.$refs.sign_show.src = "../static/alphabet/j_noarrow.png";
+					} else if (key == "z") {
+						// special animation for z
+						this.letterClass = "letter_z";
+						this.$refs['sign_show'].src = "../static/alphabet/z_noarrow.png";
+					} else if (key.charCodeAt(0) >= 97  &&  key.charCodeAt(0) <= 122) {
+						// the char is a letter
+						this.letterClass = "letter";
+						this.$refs['sign_show'].src = "../static/alphabet/" + key + ".gif";
+					}
 
-        */
-      makeTable(s) {
-        //grow the rows as we go along
-        row_image = "<tr>";
-        row_letter = "<tr>";
+					this.typed_string += key;
+				}
 
-        // for every character, add an img tag with src=letter and
-        for (var i = 0; i < s.length; i++) {
-          c = s[i];
+			} else { // the input is backspace, control, shift, etc
 
-          // this may have to change, j and z are not pure hand symbols
-          if (c.charCodeAt(0) >= 97 && c.charCodeAt(0) <= 122) {
-            row_image +=
-              "<td><img id='letter' src='static/alphabet/" +
-              c +
-              ".gif' width=100 height=100></img></td>";
-          } else {
-            row_image += "<td style='min-width:100px'> </td>";
-          }
+				if (key == 'backspace') {
 
-          row_letter += "<td><p id='sign_meaning'>" + c + " </p></td>";
-        }
+					if (this.mode == 'live') {
+						this.typed_string = this.typed_string.slice(0, -1);
+					} else {
+						this.typed_string = this.typed_string.slice(0, -1)
+					}
 
-        return "<table>" + row_image + "</tr>" + row_letter + "</tr></table>";
-      },
+				} else {
 
-      /*
-          Occurs on every keypress.
-        */
-      logKey(e) {
-        const key = e.key.toLowerCase();
-        console.log(key);
-        if (String(key).length == 1) {
-          resetAnim(el);
+					if (this.mode == 'live') {
+						this.clearMeaning()
+					} else {
+						this.typed_string = ''
+					}
 
-          if (mode == "live") {
-            if (key == "j") {
-              // special animation for j
-              el.className = "letter_j";
-              el.src = "static/alphabet/j_noarrow.png";
-            } else if (key == "z") {
-              // special animation for z
-              el.className = "letter_z";
-              el.src = "static/alphabet/z_noarrow.png";
-            } else if (key.charCodeAt(0) >= 97 && key.charCodeAt(0) <= 122) {
-              // the char is a letter
-              el.className = "letter";
-              el.src = "static/alphabet/" + key + ".gif";
-            }
-            el_meaning.innerHTML += key;
-          } else {
-            typed_string += key;
-          }
-        } else {
-          // the input is backspace, control, shift, etc
 
-          if (key == "backspace") {
-            if (mode == "live") {
-              el_meaning.innerHTML = el_meaning.innerHTML.slice(0, -1);
-            } else {
-              typed_string = typed_string.slice(0, -1);
-            }
-          } else {
-            if (mode == "live") {
-              clearMeaning();
-            } else {
-              typed_string = "";
-            }
-          }
-        }
+				}
 
-        if (mode == "live") {
-          time_show = 2;
-        } else {
-          document.getElementById("tablecontainer").innerHTML = makeTable(
-            typed_string
-          );
-        }
+			}
 
-        //console.log(key)
-        //console.log(typed_string)
-      },
+			
+			if (this.mode == 'live') {
+				this.time_show = 2
+			} else {
+				document.getElementById('tablecontainer').innerHTML = makeTable(this.typed_string)
+			}
+
+        },
+
+
+
+		/*
+			Reset the animation class for a particlar element
+		*/
+		resetAnim(el) {
+			this.letterClass = "";
+			this.$refs[el].style.animation = 'none';
+			this.$refs[el].offsetHeight; /* trigger reflow */
+			this.$refs[el].style.animation = null; 
+		},
+
+
+
+		/*
+			Clear the meaning subline.
+		*/
+		clearMeaning(){
+			this.test_out_string = this.typed_string
+			//this.$refs.sign_show
+			this.resetAnim('text_out');
+			this.typed_string = ''
+		},
+
+
+
+		toggleMode() {
+			//mode = mode == 'live' ? 'table' : 'live'
+			if (this.mode == 'live') {
+
+				clearInterval(this.interval)
+				this.typed_string = ''
+				//this.$refs.sign_show.style.display = 'none';
+				this.mode = 'table'
+
+
+			} else if (this.mode == 'table'){
+
+				document.getElementById('tablecontainer').innerHTML = ''
+
+				//el.style.display = "inline-block"
+				this.mode = 'live'
+				this.interval = setInterval(function(){
+					console.log('time')
+					if (this.time_show <= 0) {
+						this.clearMeaning()
+					} else {
+						this.time_show--
+					}
+				}, 1000)
+
+			} else {
+
+			}
+
+			
+		},
+
+
+
     }
+
+
   }
+
+
 </script>
 
 
 
 
+
+
+
+
 <style>
-	#app {
-		font-family: "Avenir", Helvetica, Arial, sans-serif;
-		-webkit-font-smoothing: antialiased;
-		-moz-osx-font-smoothing: grayscale;
-		text-align: center;
-		color: #2c3e50;
-		margin-top: 60px;
+
+
+	body, head {
+		  justify-content: center;
 	}
+
+
+
+
+	#sign_meaning {
+		margin:auto;
+		font-size: 50px;
+		font-family: Calibri;
+		text-decoration: bold;
+		text-align: center;
+	}
+
+
+
+	#sign_meaning_out {
+		margin:auto;
+		font-size: 50px;
+		font-family: Calibri;
+		text-decoration: bold;
+		text-align: center;
+		animation: slide-bottom 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+	}
+
+
+
+	@keyframes slide-bottom {
+	  0% {
+	            transform: translateY(0);
+	            opacity: 1;
+	  }
+	  100% {
+	            transform: translateY(100px);
+	            opacity:0;
+	  }
+	}
+
+
+
+
+
+	.container {
+	  width: 100%;
+	  height:100%;
+	}
+
+	.center {
+	  margin: 0;
+	  position: absolute;
+	  top: 40%;
+	  left: 50%;
+	  -ms-transform: translate(-50%, -50%);
+	  transform: translate(-50%, -50%);
+	}
+
+
+
+
+
+
+	.letter {
+		animation: scale-up-center 0.2s;
+	}
+
+	@keyframes scale-up-center {
+	  0% {
+	            transform: scale(0.8);
+	  }
+	  100% {
+	            transform: scale(1);
+	  }
+	}
+
+
+
+	.letter_j {
+		margin-left: -50px;
+		margin-top: 100px;
+		offset-path: path('M235,258 C312,402 340,202 326,143');
+		offset-rotate: 0deg;
+		animation: move 0.3s ease-in-out;
+		animation-fill-mode: forwards;
+	}
+
+
+
+
+	.letter_z {
+		margin-left: -100px;
+		margin-top: 130px;
+		offset-path: path('M 140 88    400 88   140 175    400 175');
+		offset-rotate: 0deg;
+		animation: move 0.8s;
+		animation-fill-mode: forwards;
+	}
+
+
+
+
+	@keyframes move {
+		0% {
+	        transform: scale(0.8);
+		}
+
+		100% { 
+			offset-distance: 100%;
+	        transform: scale(1);
+		}
+	}
+
+
 </style>
