@@ -31,9 +31,14 @@
 
 
 			<!-- display content for live transcription -->
-			<div v-else-if="mode == 'live'" class="center">
+			<div v-else-if="mode == 'live' || mode == 'game'" class="center">
+
+				
 
 				<center>
+					<button v-if="mode == 'game'" @click="showWord(wordList[0])"> Replay ({{display_interval}} ms)</button>
+					<button v-if="mode == 'game'" @click="display_interval -= 50">🠔</button>
+					<button v-if="mode == 'game'" @click="display_interval += 50">➝</button>
 					<img id="letter" ref="sign_show" :class="letterClass" src="static/alphabet/a.gif" width=500 height=500/>
 				</center>
 
@@ -54,198 +59,233 @@
 
 <script>
 
-	import 'random-words';
 
-  export default {
-
-
-
-    data() {
-      return {
-		// changing animation class based on letter
-		letterClass: 'letter',
-
-		// image source showing for the live display
-		letterSrc: "../static/alphabet/a.png",
-
-		// currently typed/displayed string
-		typed_string: '',
-
-		// fading string
-		test_out_string: '',
-
-		/*
-			live, table, game
-		*/
-        mode: 'live',
-		
-		// countdown for clearing text utils
-        interval: {},
-		time_show: 0,
-
-		// game utils
-		wordGen: {},
-		wordList: [],
-		
-      };
-    },
+	export default {
 
 
 
-    mounted() {
-		document.addEventListener('keydown', this.logKey);
+		data() {
+			return {
 
-		this.interval = setInterval(() => {
-			console.log(this.time_show)
-			if (this.time_show <= 0) {
-				this.clearMeaning()
-			} else {
-				this.time_show--
-			}
-		}, 1000)
+				// changing animation class based on letter
+				letterClass: 'letter',
 
+				// image source showing for the live display
+				letterSrc: "../static/alphabet/a.png",
 
-		this.wordGen = require('random-words');
-		this.wordList = this.wordGen(10);
-		console.log(this.wordList);
+				// currently typed/displayed string
+				typed_string: '',
 
-    },
+				// fading string
+				test_out_string: '',
 
+				
+				// live, table, game
+				mode: 'game',
+				
+				// countdown for clearing text utils
+				interval: {},
+				time_show: 0,
+				display_interval: 200,
 
-
-    methods: {
-
-		// f g 
-
-
-		showLetter(letter) {
-			if (letter == "j") {
-				// special animation for j
-				this.letterClass = "letter_j";
-				this.$refs.sign_show.src = "../static/alphabet/j_noarrow.png";
-			} else if (letter == "z") {
-				// special animation for z
-				this.letterClass = "letter_z";
-				this.$refs['sign_show'].src = "../static/alphabet/z_noarrow.png";
-			} else if (letter.charCodeAt(0) >= 97  &&  letter.charCodeAt(0) <= 122) {
-				// the char is a letter
-				this.letterClass = "letter";
-				this.$refs['sign_show'].src = "../static/alphabet/" + letter + ".gif";
-			}
+				// game utils
+				wordGen: {},
+				wordList: [],
+			
+			};
 		},
 
 
 
-      	logKey(e) {
-			  
-			const key = e.key.toLowerCase();
-			console.log(key)
+		mounted() {
+			
+			document.addEventListener('keydown', this.logKey);
+
+			this.wordGen = require('random-words');
+			this.wordList = this.wordGen(10);
+			console.log(this.wordList[0]);
+
+			this.showWord(this.wordList[0]);
+
+		},
 
 
-			if (String(key).length == 1) {
-				
-				if (this.mode == 'live') {
-					this.resetAnim("sign_show");
-					this.showLetter(key)
+
+
+
+		methods: {
+
+
+			showLetter(letter) {
+
+				if (letter == "j") {
+					// special animation for j
+					this.letterClass = "letter_j";
+					this.$refs.sign_show.src = "../static/alphabet/j_noarrow.png";
+				} else if (letter == "z") {
+					// special animation for z
+					this.letterClass = "letter_z";
+					this.$refs['sign_show'].src = "../static/alphabet/z_noarrow.png";
+				} else if (letter.charCodeAt(0) >= 97  &&  letter.charCodeAt(0) <= 122) {
+					// the char is a letter
+					this.letterClass = "letter";
+					this.$refs['sign_show'].src = "../static/alphabet/" + letter + ".gif";
 				}
 
-				this.typed_string += key;
+			},
 
-			} else { // the input is backspace, control, shift, etc
+			
+			showWord(word) {
 
-				if (key == 'backspace') {
+				if (this.mode == 'game') {
 
-					if (this.mode == 'live') {
-						this.typed_string = this.typed_string.slice(0, -1);
-					} else {
-						this.typed_string = this.typed_string.slice(0, -1)
+					for (var i = 0; i < word.length; i++) {
+						setTimeout( 
+							function(c) { 
+								this.resetAnim("sign_show");
+								this.showLetter(c) 
+							}.bind(this),
+							this.display_interval*i,
+							word.charAt(i)
+						);
 					}
+				} else if (this.mode == 'table') {
+					this.typed_string = word;
+				}
+
+			},
+
+
+
+			submitGuess() {
+				if (this.typed_string == this.wordList[0]) {
+					console.log('correct')
+				} else {
+					console.error('incorrect')
+				}
+			},
+
+
+
+			// Handle a keyboard keypress. Will vary with mode
+
+			logKey(e) {
+				
+				const key = e.key.toLowerCase();
+				console.log(key)
+
+
+				if (String(key).length == 1) { // input is a single letter
+					
+					if (this.mode == 'live') {
+						this.resetAnim('sign_show');
+						this.showLetter(key);
+					}
+
+					this.typed_string += key;
 
 				} else {
 
-					if (this.mode == 'live') {
-						this.clearMeaning();
-					} else {
-						this.typed_string = ''
+					if (key == 'backspace') { // backspace
+
+						if (this.mode == 'live') {
+							this.typed_string = this.typed_string.slice(0, -1);
+						} else {
+							this.typed_string = this.typed_string.slice(0, -1)
+						}
+
+					} else if (this.mode == 'game' && key == 'enter') {
+
+						this.submitGuess();
+					
+					} else { // all other keys (caps lock, shift, enter, etc.)
+
+						if (this.mode == 'live' || this.mode == 'game') {
+							this.clearMeaning();
+						} else {
+							this.typed_string = '';
+						}
+
 					}
 
 				}
 
-			}
+				
+				if (this.mode == 'live') {
+					this.time_show = 2
+				}
 
-			
-			if (this.mode == 'live') {
-				this.time_show = 2
-			}
-
-        },
+			},
 
 
 
-		/*
-			Reset the animation class for a particlar element
-		*/
-		resetAnim(el) {
-			this.letterClass = "";
-			this.$refs[el].style.animation = 'none';
-			this.$refs[el].offsetHeight; /* trigger reflow */
-			this.$refs[el].style.animation = null; 
-		},
+			/*
+				Reset the animation class for a particlar element
+			*/
+			resetAnim(el) {
+				//this.letterClass = "";
+				this.$refs[el].style.animation = 'none';
+				this.$refs[el].offsetHeight; /* trigger reflow */
+				this.$refs[el].style.animation = null; 
+			},
 
 
 
-		/*
-			Clear the meaning subline.
-		*/
-		clearMeaning(){
-			this.test_out_string = this.typed_string
-			//this.$refs.sign_show
-			this.resetAnim('text_out');
-			this.typed_string = ''
-		},
-
-
-
-
-
-		toggleMode() {
-			//mode = mode == 'live' ? 'table' : 'live'
-			if (this.mode == 'live') {
-
-				clearInterval(this.interval)
+			/*
+				Clear the meaning subline.
+			*/
+			clearMeaning(){
+				this.test_out_string = this.typed_string
+				//this.$refs.sign_show
+				this.resetAnim('text_out');
 				this.typed_string = ''
-				//this.$refs.sign_show.style.display = 'none';
-				this.mode = 'table'
-
-
-			} else if (this.mode == 'table'){
-
-				//document.getElementById('tablecontainer').innerHTML = ''
-
-				//el.style.display = "inline-block"
-				this.mode = 'live'
-				this.interval = setInterval(() => {
-					console.log(this.time_show)
-					if (this.time_show <= 0) {
-						this.clearMeaning()
-					} else {
-						this.time_show--
-					}
-				}, 1000)
-
-			} else {
-
-			}
-
-			
-		},
+				//setTimeout( () => {this.test_out_string = ''}, 250 );
+			},
 
 
 
-    }
 
 
-  }
+			toggleMode() {
+
+				if (this.mode == 'live') {
+
+					clearInterval(this.interval)
+					this.typed_string = ''
+					this.mode = 'table'
+
+
+				} else if (this.mode == 'table') {
+
+					this.mode = 'game';
+					this.showWord(this.wordList[0]);
+
+
+
+				} else if (this.mode == 'game') {
+
+					this.mode = 'live';
+					this.interval = 0;
+					this.interval = setInterval(() => {
+						console.log(this.time_show)
+						if (this.time_show <= 0) {
+							this.clearMeaning()
+						} else {
+							this.time_show--
+						}
+					}, 1000)
+
+				}
+
+				
+			},
+
+
+
+		}
+
+
+	}
 
 
 </script>
@@ -304,17 +344,17 @@
 
 
 	.container {
-	  width: 100%;
-	  height:100%;
+		width: 100%;
+		height:100%;
 	}
 
 	.center {
-	  margin: 0;
-	  position: absolute;
-	  top: 40%;
-	  left: 50%;
-	  -ms-transform: translate(-50%, -50%);
-	  transform: translate(-50%, -50%);
+		margin: 0;
+		position: absolute;
+		top: 40%;
+		left: 50%;
+		-ms-transform: translate(-50%, -50%);
+		transform: translate(-50%, -50%);
 	}
 
 
