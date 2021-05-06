@@ -15,7 +15,7 @@
 
 
 			<!-- display content for table -->
-			<div v-if="mode == 'table'" id="tablecontainer" class="center">
+			<div v-if="mode == 'table'" id="tablecontainer" class="center" >
 				<table>
 					<tr>
 						<td v-for="c in typed_string" :key="c">
@@ -54,21 +54,42 @@
 
 <script>
 
+	import 'random-words';
+
   export default {
 
 
 
     data() {
       return {
+		// changing animation class based on letter
 		letterClass: 'letter',
+
+		// image source showing for the live display
 		letterSrc: "../static/alphabet/a.png",
+
+		// currently typed/displayed string
 		typed_string: '',
+
+		// fading string
 		test_out_string: '',
+
+		/*
+			live, table, game
+		*/
         mode: 'live',
+		
+		// countdown for clearing text utils
         interval: {},
 		time_show: 0,
+
+		// game utils
+		wordGen: {},
+		wordList: [],
+		
       };
     },
+
 
 
     mounted() {
@@ -83,39 +104,49 @@
 			}
 		}, 1000)
 
+
+		this.wordGen = require('random-words');
+		this.wordList = this.wordGen(10);
+		console.log(this.wordList);
+
     },
+
 
 
     methods: {
 
+		// f g 
+
+
+		showLetter(letter) {
+			if (letter == "j") {
+				// special animation for j
+				this.letterClass = "letter_j";
+				this.$refs.sign_show.src = "../static/alphabet/j_noarrow.png";
+			} else if (letter == "z") {
+				// special animation for z
+				this.letterClass = "letter_z";
+				this.$refs['sign_show'].src = "../static/alphabet/z_noarrow.png";
+			} else if (letter.charCodeAt(0) >= 97  &&  letter.charCodeAt(0) <= 122) {
+				// the char is a letter
+				this.letterClass = "letter";
+				this.$refs['sign_show'].src = "../static/alphabet/" + letter + ".gif";
+			}
+		},
+
+
+
       	logKey(e) {
 			  
-
 			const key = e.key.toLowerCase();
 			console.log(key)
 
+
 			if (String(key).length == 1) {
-
 				
-
 				if (this.mode == 'live') {
 					this.resetAnim("sign_show");
-
-					if (key == "j") {
-						// special animation for j
-						this.letterClass = "letter_j";
-						this.$refs.sign_show.src = "../static/alphabet/j_noarrow.png";
-					} else if (key == "z") {
-						// special animation for z
-						this.letterClass = "letter_z";
-						this.$refs['sign_show'].src = "../static/alphabet/z_noarrow.png";
-					} else if (key.charCodeAt(0) >= 97  &&  key.charCodeAt(0) <= 122) {
-						// the char is a letter
-						this.letterClass = "letter";
-						this.$refs['sign_show'].src = "../static/alphabet/" + key + ".gif";
-					}
-
-					
+					this.showLetter(key)
 				}
 
 				this.typed_string += key;
@@ -133,11 +164,10 @@
 				} else {
 
 					if (this.mode == 'live') {
-						this.clearMeaning()
+						this.clearMeaning();
 					} else {
 						this.typed_string = ''
 					}
-
 
 				}
 
@@ -293,6 +323,7 @@
 
 
 	.letter {
+		mix-blend-mode: multiply;
 		animation: scale-up-center 0.2s;
 	}
 
@@ -308,6 +339,7 @@
 
 
 	.letter_j {
+		mix-blend-mode: multiply;
 		margin-left: -50px;
 		margin-top: 100px;
 		offset-path: path('M235,258 C312,402 340,202 326,143');
@@ -320,6 +352,7 @@
 
 
 	.letter_z {
+		mix-blend-mode: multiply;
 		margin-left: -100px;
 		margin-top: 130px;
 		offset-path: path('M 140 88    400 88   140 175    400 175');

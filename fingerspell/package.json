@@ -11,6 +11,8 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "random-words": "^1.1.1",
+    "unirest": "^0.6.0",
     "vue": "^2.5.2"
   },
   "devDependencies": {
