@@ -36,9 +36,18 @@
 				
 
 				<center>
-					<button v-if="mode == 'game'" @click="showWord(wordList[0])"> Replay ({{display_interval}} ms)</button>
+					<p v-if="showResult"> {{ typed_string == answer ? 'Correct!' : 'Wrong! ' + answer}} </p>
+
+										<!-- <p v-show="showResult">
+						<p v-if="typed_string == answer" style="color:green"> correct! </p>
+						<p v-else style="color:red"> Wrong! {{answer}} </p> -->
+
+					<br>
+					<button v-if="mode == 'game'" @click="showNext ? showWord(answer, true) : showWord(answer)"> Replay ({{display_interval}} ms)</button>
 					<button v-if="mode == 'game'" @click="display_interval -= 50">🠔</button>
 					<button v-if="mode == 'game'" @click="display_interval += 50">➝</button>
+					<button v-if="showNext" @click="answer = wordList.shift(); showWord(answer); showResult = false;  showNext = false">next</button>
+					<br>
 					<img id="letter" ref="sign_show" :class="letterClass" src="static/alphabet/a.gif" width=500 height=500/>
 				</center>
 
@@ -82,6 +91,9 @@
 				
 				// live, table, game
 				mode: 'game',
+				answer: '',
+				showResult: false,
+				showNext: false,
 				
 				// countdown for clearing text utils
 				interval: {},
@@ -103,9 +115,10 @@
 
 			this.wordGen = require('random-words');
 			this.wordList = this.wordGen(10);
-			console.log(this.wordList[0]);
-
-			this.showWord(this.wordList[0]);
+			this.answer = this.wordList[0];
+			this.wordList.shift();
+			console.log(this.answer);
+			this.showWord(this.answer);
 
 		},
 
@@ -135,7 +148,9 @@
 			},
 
 			
-			showWord(word) {
+			showWord(word, answer = false) {
+
+				this.typed_string = '';
 
 				if (this.mode == 'game') {
 
@@ -143,12 +158,22 @@
 						setTimeout( 
 							function(c) { 
 								this.resetAnim("sign_show");
-								this.showLetter(c) 
+								this.showLetter(c);
+
+								if (answer) {
+									this.typed_string = c;
+								}
+
 							}.bind(this),
 							this.display_interval*i,
 							word.charAt(i)
 						);
 					}
+
+					if (answer) {
+
+					}
+
 				} else if (this.mode == 'table') {
 					this.typed_string = word;
 				}
@@ -158,11 +183,34 @@
 
 
 			submitGuess() {
-				if (this.typed_string == this.wordList[0]) {
-					console.log('correct')
+
+				this.showResult = true;
+
+				if (this.typed_string == this.answer) {
+
+					this.display_interval = 450;
+
 				} else {
-					console.error('incorrect')
+
+
+					console.error('incorrect');
+
+					let t = this.display_interval;
+					this.display_interval = 450;
+					this.showWord(this.answer, true);
+					this.display_interval = t;
 				}
+
+				
+				if (this.wordList.length == 0) {
+					// regenerate word list
+					this.wordList = this.wordGen(10);
+				} 
+
+				// Maybe this should be done after a skip button?
+				this.showNext = true;
+
+
 			},
 
 
@@ -238,7 +286,7 @@
 				this.test_out_string = this.typed_string
 				//this.$refs.sign_show
 				this.resetAnim('text_out');
-				this.typed_string = ''
+				this.typed_string = '';
 				//setTimeout( () => {this.test_out_string = ''}, 250 );
 			},
 
