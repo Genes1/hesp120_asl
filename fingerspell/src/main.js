@@ -5,9 +5,12 @@ import App from './App';
 
 Vue.config.productionTip = false;
 
+import Game from "./Game.vue";
+
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
-  components: { App },
+  components: { App, 'game': Game },
   template: '<App/>',
 });
