@@ -6,10 +6,14 @@
 			<center>
 				<button @click="toggleMode()"
 					style="width:300px; height:50px;"
+					@mouseover="hover = true"
+					@mouseleave="hover = false"
 				>
 					Toggle mode: 
 					<b id='mode'> {{mode}} </b>
 				</button>
+				<br>
+				<span v-if="hover">{{tooltip}}</span>
 			</center>
 
 
@@ -19,7 +23,7 @@
 				<table>
 					<tr>
 						<td v-for="c in typed_string" :key="c">
-							<img :src="`static/alphabet/${c}.gif`" width=100 height=100/>
+							<img v-if="c != ' '" :src="`static/alphabet/${c}.gif`" width=100 height=100/>
 						</td>
 					</tr>
 					<tr>
@@ -36,18 +40,21 @@
 				
 
 				<center>
-					<p v-if="showResult" class="pulsate"> {{ typed_string == answer ? 'Correct!' : 'Wrong! ' + answer}} </p>
-
+					<!-- <p v-if="showResult" class="pulsate"> {{ typed_string == answer ? 'Correct!' : 'Wrong! ' + answer}} </p> -->
 										<!-- <p v-show="showResult">-->
-						<p v-if="showResult && typed_string == answer" class="pulsate" style="color:green"> correct! </p>
-						<p v-else-if="showResult" class="pulsate" style="color:#E63946"> Wrong! {{answer}} </p> 
+											
+					<p v-if="showResult && typed_string == answer" class="pulsate" style="color:green"> Correct! </p>
+					<p v-else-if="showResult" class="pulsate" style="color:#E63946"> Wrong! "{{answer}}"" </p> 
 
 					<br>
-					<button v-if="mode == 'game'" @click="showNext ? showWord(answer, true) : showWord(answer)"> Replay ({{display_interval}} ms)</button>
 					<button v-if="mode == 'game'" @click="display_interval -= 50">🠔</button>
-					<button v-if="mode == 'game'" @click="display_interval += 50">➝</button>
-					<button v-if="showNext" @click="answer = wordList.shift(); showWord(answer); showResult = false;  showNext = false">Next word</button>
+					<button v-if="mode == 'game'" @click="showNext ? showWord(answer, true) : showWord(answer)"> Replay ({{display_interval}} ms)</button>
+					<button v-if="mode == 'game'" :style="showNext ? 'margin-right: 30px' : ''" @click="display_interval += 50">➝</button>
+					<button v-if="showNext"  @click="answer = wordList.shift(); showWord(answer); showResult = false;  showNext = false">Next word</button>
 					<br>
+					<p v-if="mode == 'game'"> </p>
+					<br>
+
 					<img id="letter" ref="sign_show" :class="letterClass" src="static/alphabet/a.gif" width=500 height=500/>
 				</center>
 
@@ -103,6 +110,9 @@
 				// game utils
 				wordGen: {},
 				wordList: [],
+
+				hover: false,
+				tooltip: 'Test your skills by transcribing random words.',
 			
 			};
 		},
@@ -121,8 +131,6 @@
 			this.showWord(this.answer);
 
 		},
-
-
 
 
 
@@ -193,7 +201,7 @@
 				} else {
 
 
-					console.error('incorrect');
+					//console.error('incorrect');
 
 					let t = this.display_interval;
 					this.display_interval = 450;
@@ -220,7 +228,7 @@
 			logKey(e) {
 				
 				const key = e.key.toLowerCase();
-				console.log(key)
+				//console.log(key)
 
 
 				if (String(key).length == 1) { // input is a single letter
@@ -301,21 +309,21 @@
 					clearInterval(this.interval)
 					this.typed_string = ''
 					this.mode = 'table'
-
+					this.tooltip = "Show several letters side-by-side."
 
 				} else if (this.mode == 'table') {
 
 					this.mode = 'game';
 					this.showWord(this.wordList[0]);
-
-
-
+					this.tooltip = "Test your skills by transcribing random words."
+					
 				} else if (this.mode == 'game') {
 
 					this.mode = 'live';
 					this.interval = 0;
+					this.tooltip = "An interactive sign-shower."
 					this.interval = setInterval(() => {
-						console.log(this.time_show)
+						//console.log(this.time_show)
 						if (this.time_show <= 0) {
 							this.clearMeaning()
 						} else {
@@ -368,6 +376,7 @@
 	.pulsate {
 		-webkit-animation: pulsate 3s ease-out;
 		-webkit-animation-iteration-count: infinite; 
+		font-size: 20px;
 	}
 
 	@-webkit-keyframes pulsate {
@@ -421,7 +430,8 @@
 
 	.container {
 		width: 100%;
-		height:100%;
+		height: 100%;
+		min-width: 700px;;
 	}
 
 	.center {

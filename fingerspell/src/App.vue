@@ -3,15 +3,39 @@
 
 	<div id="full_container">
 		
-		<h1 style='font-size: 100px;'> ASL </h1>
+		<h1 style='font-size: 100px;'> ASL: Myths & Fingerspelling</h1>
 
-		<div class="neu_container" style="max-width: 50%; padding: 0 50px 20px 50px">
+		<!-- TODO MAKE MYTHS TABLE -->
+		<table>
+		</table>
+
+
+
+
+					<!-- <div style="display: grid; grid-template-columns: 70% 20%;   grid-gap: 2%;  align-content: center;  justify-content: center;  padding: 10px 0 10px 0">
+				<p> ASL originated around 200 years ago in New England, when French sign language, known as LSF or Langue des Signes Française, 
+				merged with local sign languages in North America. This contact between local languages and LSF created a new language with similar 
+				features to both the local sign languages and the french LSF. This new language was called American Sign Language, and still today 
+				many similarities can be seen between LSF and ASL. Despite these similarities, they are distinct languages, and users of one language 
+				cannot necessarily understand users of the other. </p> 
+				<img style="float:right; width:275px; height:250px;" :src="require('./assets/photo-two-professionals-using-sign-language_crop.jpg')">
+
+
+			</div> -->
+
+
+
+
+
+
+		<div class="neu_container" style="padding: 0 50px 20px 50px">
 			<h2> Origins of ASL </h2> 
-			<p> ASL originated around 200 years ago in New England, when French sign language, known as LSF or Langue des Signes Française, 
-			merged with local sign languages in North America. This contact between local languages and LSF created a new language with similar 
-			features to both the local sign languages and the french LSF. This new language was called American Sign Language, and still today 
-			many similarities can be seen between LSF and ASL. Despite these similarities, they are distinct languages, and users of one language 
-			cannot necessarily understand users of the other. </p>
+			<hr>
+				<p> ASL originated around 200 years ago in New England, when French sign language, known as LSF or Langue des Signes Française, 
+				merged with local sign languages in North America. This contact between local languages and LSF created a new language with similar 
+				features to both the local sign languages and the french LSF. This new language was called American Sign Language, and still today 
+				many similarities can be seen between LSF and ASL. Despite these similarities, they are distinct languages, and users of one language 
+				cannot necessarily understand users of the other. </p> 
 
 			<q class="source">
 				Source: U.S. Department of Health and Human Services. (2020, December 14). American Sign Language. 
@@ -19,10 +43,9 @@
 			</q>
 		</div>
 
-
-		<div class="neu_container" style="margin-top: 150px; max-width: 50%; padding: 0 50px 20px 50px">
+		<div class="neu_container" style="margin-top: 150px; padding: 0 50px 20px 50px">
 			<h2> Variants of ASL </h2> 
-
+			<hr>
 			<p> 
 				Much like any spoken language, ASL has lots of complex variation from one signer to another. These variations depend
 				 on a multitude of factors, and have only recently begun being studied. While lexical variations in ASL were being 
@@ -43,12 +66,18 @@
 			</q>
 		</div>
 
-
-	
-
+		<img style="margin: 75px 0 50px 0;" :src="require('./assets/diffs_crop.png')">
 
 
-		<div class="neu_container" style="margin: 150px 0 150px 0; max-width: 50%; padding: 0 50px 20px 50px">
+		<!-- TODO SOURCE THIS IMG -->
+		<!-- Brentari, D. (2019). Sign Language Phonological Variation and Change. In Sign Language Phonology (Key Topics in Phonology, pp. 241-268).
+		Cambridge: Cambridge University Press. doi:10.1017/9781316286401.008 -->
+
+
+
+
+
+		<div class="neu_container" style="margin: 150px 0 150px 0; padding: 0 50px 20px 50px">
 			<h2> Fingerspelling </h2> 
 			<hr>
 			<p> 
@@ -56,8 +85,17 @@
 				signs vary between dialects due to regional and cultural differences. This is further exacerbated when considering 
 				that novice, non-sign speakers learning to sign will not always be able to recognize the intricacies of full sign languages. 
 				The solution to this problem is <b>fingerspelling</b>. 
+				
+				<br><br>
 
-				Fingerspelling is a letter-based communication system within the sign community. 
+				Fingerspelling is a letter-based signing system. The benefit to knowing the basic alphabet is that any message can then be 
+				communicated between speakers regardless of sign vocabulary -- with just 26 signs. It is considered fundamental in learning 
+				sign languages because of its versatility between fluent and non-fluent speakers. For this reason, it's important to start
+				by learning it!
+
+				<br><br>
+
+				Use the following tool to help you learn the ASL alphabet!
 			</p>
 
 
@@ -68,8 +106,6 @@
 
 
 		<div class="neu_container" style="margin: 100px 0 200px 0; padding: 50px; "
-					    	@mouseover="hover = true"
-				@mouseleave="hover = false"
 		>
 			<game 
 
@@ -137,7 +173,7 @@
 	}
 
 	p {
-		font-size: 18px;
+		font-size: 22px;
 		color: #1d3557;
 	}
 
@@ -167,6 +203,8 @@
 
 		display: grid;
 		place-items: center;
+
+		max-width: 60%;
 
 		/* border-radius: 50px;
 		background: #e0e0e0;
