@@ -38,9 +38,9 @@
 				<center>
 					<p v-if="showResult" class="pulsate"> {{ typed_string == answer ? 'Correct!' : 'Wrong! ' + answer}} </p>
 
-										<!-- <p v-show="showResult">
-						<p v-if="typed_string == answer" style="color:green"> correct! </p>
-						<p v-else style="color:red"> Wrong! {{answer}} </p> -->
+										<!-- <p v-show="showResult">-->
+						<p v-if="showResult && typed_string == answer" class="pulsate" style="color:green"> correct! </p>
+						<p v-else-if="showResult" class="pulsate" style="color:#E63946"> Wrong! {{answer}} </p> 
 
 					<br>
 					<button v-if="mode == 'game'" @click="showNext ? showWord(answer, true) : showWord(answer)"> Replay ({{display_interval}} ms)</button>
@@ -349,10 +349,10 @@
 
 
 	button{
-border-radius: 8px;
-background: linear-gradient(145deg, #cacaca, #f0f0f0);
-box-shadow:  6px 6px 13px #5a5a5a,
-             -6px -6px 13px #ffffff;
+		border-radius: 17px;
+		background: #a8dadc;
+		box-shadow:  2px 2px 4px #8bb5b7,
+					-2px -2px 4px #c5ffff;
 
 		margin: 0 10px 0 10px;
 		border: none;
@@ -368,7 +368,6 @@ box-shadow:  6px 6px 13px #5a5a5a,
 	.pulsate {
 		-webkit-animation: pulsate 3s ease-out;
 		-webkit-animation-iteration-count: infinite; 
-		opacity: 0.5;
 	}
 
 	@-webkit-keyframes pulsate {

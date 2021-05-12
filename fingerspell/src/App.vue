@@ -3,11 +3,10 @@
 
 	<div id="full_container">
 		
-		<h1> ASL </h1>
+		<h1 style='font-size: 100px;'> ASL </h1>
 
 		<div class="neu_container" style="max-width: 50%; padding: 0 50px 20px 50px">
 			<h2> Origins of ASL </h2> 
-
 			<p> ASL originated around 200 years ago in New England, when French sign language, known as LSF or Langue des Signes Française, 
 			merged with local sign languages in North America. This contact between local languages and LSF created a new language with similar 
 			features to both the local sign languages and the french LSF. This new language was called American Sign Language, and still today 
@@ -21,7 +20,7 @@
 		</div>
 
 
-		<div class="neu_container" style="margin-top: 100px; max-width: 50%; padding: 0 50px 20px 50px">
+		<div class="neu_container" style="margin-top: 150px; max-width: 50%; padding: 0 50px 20px 50px">
 			<h2> Variants of ASL </h2> 
 
 			<p> 
@@ -49,9 +48,9 @@
 
 
 
-		<div class="neu_container" style="margin: 175px 0 100px 0; max-width: 50%; padding: 0 50px 20px 50px">
+		<div class="neu_container" style="margin: 150px 0 150px 0; max-width: 50%; padding: 0 50px 20px 50px">
 			<h2> Fingerspelling </h2> 
-			<hr/>
+			<hr>
 			<p> 
 				One major barrier that impedes the learning of sign language is the sheer amount of signs used. As mentioned,
 				signs vary between dialects due to regional and cultural differences. This is further exacerbated when considering 
@@ -68,9 +67,23 @@
 
 
 
-		<div class="neu_container" style="margin-top: 250px 0 20% 0; padding: 50px; ">
-			<game />
+		<div class="neu_container" style="margin: 100px 0 200px 0; padding: 50px; "
+					    	@mouseover="hover = true"
+				@mouseleave="hover = false"
+		>
+			<game 
+
+			/>
+
+			    <span v-if="hover">This is a secret message.</span>
+
+			
 		</div>
+
+		<a href="https://www.lifeprint.com/asl101/fingerspelling/abc-gifs/index.htm" style="color:#457B9D; font-size: 10px">Thank you to Dr. Bill Vicars for the ASL alphabet images!</a>
+
+
+
 
 	</div>
 
@@ -84,6 +97,12 @@
 <script>
     import game from "./Game.vue";
 	export default {
+		data() {
+			return {
+				hover: false,
+			};
+		},
+
         components: {
             game
         },
@@ -99,27 +118,43 @@
 
 <style>
 
+/* e0e0e0 */
+
+/* https://coolors.co/e63946-f1faee-a8dadc-457b9d-1d3557 */
+
 	body, head {
 		  justify-content: center;
-		  background-color: #e0e0e0;
+		  background-color: #a8dadc;
+	}
+
+	h1, h2 {
+		color: #1d3557;
+	}
+
+	h2 {
+		font-size: 35px;
+		margin: 20px 0 0 0;
 	}
 
 	p {
 		font-size: 18px;
+		color: #1d3557;
 	}
 
+
 	hr { 
-		width: 75%;
-		  margin-left: auto;
-  margin-right: auto;
-		margin-left: 0
+		width: 100%;
+		margin-left: auto;
+  		margin-right: auto;
+		margin-left: 0;
+		border: 1px solid #483A58;
 	}
 
 
 	.source {
 		font-style: italic;
 		font-size: 12px;
-		color: #858282;
+		color: #457b9d;
 	}
 
 	#full_container {
@@ -138,10 +173,10 @@
 		box-shadow:  20px 20px 60px #bebebe,
 					-20px -20px 60px #ffffff; */
 
-		border-radius: 50px;
-		background: #e0e0e0;
-		box-shadow:  5px 5px 10px #bebebe,
-					-5px -5px 10px #ffffff;
+		border-radius: 54px;
+		background: #a8dadc;
+		box-shadow:  36px 36px 35px #8fb9bb,
+					-36px -36px 72px #c1fbfd;
 	}
 
 
