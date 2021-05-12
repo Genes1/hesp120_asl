@@ -3,25 +3,40 @@
 
 	<div id="full_container">
 		
-		<h1 style='font-size: 100px;'> ASL: Myths & Fingerspelling</h1>
+		<h1 style='font-size: 100px; white-space: nowrap;'> ASL: Myths & Fingerspelling</h1>
 
-		<!-- TODO MAKE MYTHS TABLE -->
-		<table>
+		<p style="width: 50%; font-size: 24px">
+			Everybody knows about sign languages, but how much do they REALLY know? Here's a chance to test your knowledge 
+			about ASL, to learn about its history and intricancies, and to pick up some of it on your own! Let's get started
+			with some questions.
+		</p>
+
+
+		<table class="neu_container" style="margin: 75px 0 150px 0;   border-radius: 5px;   padding: 0 0 20px 0;    display: grid;   grid-template-columns: 100%;   justify-items: center; ">
+
+			<tr> 
+				<question   
+					style="width:1000px"
+					:question="'Lipreading is an effective form of communicating with most deaf people.'"
+					:answer="false"
+					:response="'According to a 2011 study, the mean score for visual only sentence lip reading was only 12.4%. Lip reading is an ineffective method of communication, and is why learning ASL is so important.'"
+					:source="'Altieri, N. A., Pisoni, D. B., & Townsend, J. T. (2011). Some normative data on lip-reading skills (L). The Journal of the Acoustical Society of America, 130(1), 1–4. https://doi.org/10.1121/1.3593376'"
+				> </question> 
+			</tr>
+
+
+			<tr> 
+				<question   
+					style="width:1000px"
+					:question="'Most parents of deaf children can use ASL effectively.'"
+					:answer="false"
+					:response="'According to a 2010 survey from Gallaudet University in DC, only about 40% of families with deaf children use ASL at home, leaving 60% deprived of language. Again, this is another reason why knowing ASL can be so powerful.'"
+					:source="'Dougherty, E. (2017, March 6). Studying Language Acquisition in Deaf Children: The Brink. Boston University. http://www.bu.edu/articles/2017/asl-language-acquisition/#:~:text=Approximately%2090%20to%2095%20percent,before%20their%20children%20enter%20school.'"
+				> </question> 
+			</tr>
+
 		</table>
 
-
-
-
-					<!-- <div style="display: grid; grid-template-columns: 70% 20%;   grid-gap: 2%;  align-content: center;  justify-content: center;  padding: 10px 0 10px 0">
-				<p> ASL originated around 200 years ago in New England, when French sign language, known as LSF or Langue des Signes Française, 
-				merged with local sign languages in North America. This contact between local languages and LSF created a new language with similar 
-				features to both the local sign languages and the french LSF. This new language was called American Sign Language, and still today 
-				many similarities can be seen between LSF and ASL. Despite these similarities, they are distinct languages, and users of one language 
-				cannot necessarily understand users of the other. </p> 
-				<img style="float:right; width:275px; height:250px;" :src="require('./assets/photo-two-professionals-using-sign-language_crop.jpg')">
-
-
-			</div> -->
 
 
 
@@ -31,17 +46,21 @@
 		<div class="neu_container" style="padding: 0 50px 20px 50px">
 			<h2> Origins of ASL </h2> 
 			<hr>
-				<p> ASL originated around 200 years ago in New England, when French sign language, known as LSF or Langue des Signes Française, 
+
+			<p> 
+				ASL originated around 200 years ago in New England, when French sign language, known as LSF or Langue des Signes Française, 
 				merged with local sign languages in North America. This contact between local languages and LSF created a new language with similar 
 				features to both the local sign languages and the french LSF. This new language was called American Sign Language, and still today 
 				many similarities can be seen between LSF and ASL. Despite these similarities, they are distinct languages, and users of one language 
-				cannot necessarily understand users of the other. </p> 
+				cannot necessarily understand users of the other.
+			</p> 
 
 			<q class="source">
 				Source: U.S. Department of Health and Human Services. (2020, December 14). American Sign Language. 
 				National Institute of Deafness and Other Communication Disorders. https://www.nidcd.nih.gov/health/american-sign-language. 
 			</q>
 		</div>
+
 
 		<div class="neu_container" style="margin-top: 150px; padding: 0 50px 20px 50px">
 			<h2> Variants of ASL </h2> 
@@ -77,7 +96,7 @@
 
 
 
-		<div class="neu_container" style="margin: 150px 0 150px 0; padding: 0 50px 20px 50px">
+		<div class="neu_container" style="margin: 100px 0 150px 0; padding: 0 50px 20px 50px">
 			<h2> Fingerspelling </h2> 
 			<hr>
 			<p> 
@@ -98,25 +117,12 @@
 				Use the following tool to help you learn the ASL alphabet!
 			</p>
 
-
 		</div>
 
 
+		<div class="neu_container" style="margin: 100px 0 150px 0; padding: 50px;"> <game/> </div>
 
-
-
-		<div class="neu_container" style="margin: 100px 0 200px 0; padding: 50px; "
-		>
-			<game 
-
-			/>
-
-			    <span v-if="hover">This is a secret message.</span>
-
-			
-		</div>
-
-		<a href="https://www.lifeprint.com/asl101/fingerspelling/abc-gifs/index.htm" style="color:#457B9D; font-size: 10px">Thank you to Dr. Bill Vicars for the ASL alphabet images!</a>
+		<a href="https://www.lifeprint.com/asl101/fingerspelling/abc-gifs/index.htm" style="color:#457B9D; font-size: 12px">Thank you to Dr. Bill Vicars for the ASL alphabet images!</a>
 
 
 
@@ -132,6 +138,7 @@
 
 <script>
     import game from "./Game.vue";
+    import question from "./Question.vue";
 	export default {
 		data() {
 			return {
@@ -140,7 +147,7 @@
 		},
 
         components: {
-            game
+            game, question
         },
 	}
 </script>
@@ -205,11 +212,6 @@
 		place-items: center;
 
 		max-width: 60%;
-
-		/* border-radius: 50px;
-		background: #e0e0e0;
-		box-shadow:  20px 20px 60px #bebebe,
-					-20px -20px 60px #ffffff; */
 
 		border-radius: 54px;
 		background: #a8dadc;

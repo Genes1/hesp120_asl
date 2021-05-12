@@ -44,7 +44,7 @@
 										<!-- <p v-show="showResult">-->
 											
 					<p v-if="showResult && typed_string == answer" class="pulsate" style="color:green"> Correct! </p>
-					<p v-else-if="showResult" class="pulsate" style="color:#E63946"> Wrong! "{{answer}}"" </p> 
+					<p v-else-if="showResult" class="pulsate" style="color:#E63946"> Wrong! "{{answer}}" </p> 
 
 					<br>
 					<button v-if="mode == 'game'" @click="display_interval -= 50">🠔</button>
@@ -304,6 +304,8 @@
 
 			toggleMode() {
 
+				this.showResult = false;
+
 				if (this.mode == 'live') {
 
 					clearInterval(this.interval)
@@ -431,7 +433,7 @@
 	.container {
 		width: 100%;
 		height: 100%;
-		min-width: 700px;;
+		min-width: 700px;
 	}
 
 	.center {

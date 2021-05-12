@@ -6,11 +6,16 @@ import App from './App';
 Vue.config.productionTip = false;
 
 import Game from "./Game.vue";
+import Question from "./Question.vue";
 
 
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
-  components: { App, 'game': Game },
+  components: { 
+      App,
+      'game': Game,
+      'question': Question
+  },
   template: '<App/>',
 });
