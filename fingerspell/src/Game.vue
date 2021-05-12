@@ -15,7 +15,7 @@
 
 
 			<!-- display content for table -->
-			<div v-if="mode == 'table'" id="tablecontainer" class="center" >
+			<div v-if="mode == 'table'" id="tablecontainer" class="center" style="height: 500px">
 				<table>
 					<tr>
 						<td v-for="c in typed_string" :key="c">
@@ -46,7 +46,7 @@
 					<button v-if="mode == 'game'" @click="showNext ? showWord(answer, true) : showWord(answer)"> Replay ({{display_interval}} ms)</button>
 					<button v-if="mode == 'game'" @click="display_interval -= 50">🠔</button>
 					<button v-if="mode == 'game'" @click="display_interval += 50">➝</button>
-					<button v-if="showNext" @click="answer = wordList.shift(); showWord(answer); showResult = false;  showNext = false">next</button>
+					<button v-if="showNext" @click="answer = wordList.shift(); showWord(answer); showResult = false;  showNext = false">Next word</button>
 					<br>
 					<img id="letter" ref="sign_show" :class="letterClass" src="static/alphabet/a.gif" width=500 height=500/>
 				</center>
@@ -346,6 +346,17 @@
 
 
 <style>
+
+
+	button{
+border-radius: 8px;
+background: linear-gradient(145deg, #cacaca, #f0f0f0);
+box-shadow:  6px 6px 13px #5a5a5a,
+             -6px -6px 13px #ffffff;
+
+		margin: 0 10px 0 10px;
+		border: none;
+	}
 
 
 	body, head {
