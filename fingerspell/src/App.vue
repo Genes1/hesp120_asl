@@ -35,6 +35,17 @@
 				> </question> 
 			</tr>
 
+
+			<tr> 
+				<question   
+					style="width:1000px"
+					:question="'Sign type is the only feature that gives a word in sign language meaning.'"
+					:answer="false"
+					:response="'FALSE: In ASL, facial expressions and gestures are extremely important. Because signed symbols can be limited, the variation in words can differ through these gestures. For example, the signs for \'Know\' and \'Don\'t know\' are the same with your fingers, however, your facial movement would differentiate the two!'"
+					:source="'Dougherty, E. (2017, March 6). Studying Language Acquisition in Deaf Children: The Brink. Boston University. http://www.bu.edu/articles/2017/asl-language-acquisition/#:~:text=Approximately%2090%20to%2095%20percent,before%20their%20children%20enter%20school.'"
+				> </question> 
+			</tr>
+
 		</table>
 
 
@@ -114,7 +125,12 @@
 
 				<br><br>
 
-				Use the following tool to help you learn the ASL alphabet!
+				Use the following tool to help you learn the ASL alphabet! There are three modes:
+				<ol>
+					<li> <b>Game</b>:   Test your knowledge of ASL by transcribing randomized words. Change the display time to challenge your speed! </li>
+					<li> <b>Live</b>:   Sign any word you want by typing it, with one letter displayed at a time.</li>
+					<li> <b>Table</b>:   Type phrases and see the according signs all at once. Beginners start here!</li>
+				</ol>
 			</p>
 
 		</div>
